@@ -20,7 +20,8 @@ module ImpressionistController
           end
         else
           # we could create an impression anyway. for classes, too. why not?
-          raise "#{obj.class.to_s} is not impressionable!"
+          Impression.create(direct_create_statement({:message => message}))
+          # raise "#{obj.class.to_s} is not impressionable!"
         end
       end
     end
