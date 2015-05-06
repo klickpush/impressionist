@@ -12,15 +12,23 @@ module ImpressionistController
       base.before_filter :impressionist_app_filter
     end
 
-    def impressionist(obj,message=nil,opts={})
+    # Modified this method to accept a hash instead of just a message.
+    # If the message is a string do normal
+    # Otherwise pass the hash into create
+    def impressionist(obj,message={},opts={})
+      if message.is_a?(String)
+        tmp = message
+        message = {:message => tmp}
+      end
       if should_count_impression?(opts)
         if obj.respond_to?("impressionable?")
           if unique_instance?(obj, opts[:unique])
-            obj.impressions.create(associative_create_statement({:message => message}))
+            obj.impressions.create(associative_create_statement(message))
           end
         else
           # we could create an impression anyway. for classes, too. why not?
-          Impression.create(direct_create_statement({:message => message}))
+          #  START HERE JAMES
+          Impression.create(direct_create_statement(message))
           # raise "#{obj.class.to_s} is not impressionable!"
         end
       end
